@@ -13,9 +13,17 @@ import CoreLocation
 class MapScreen: UIViewController {
 
     @IBOutlet weak var mapView: MKMapView!
+    
+    let locationManager = CLLocationManager()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
+    }
+    
+    func setupLocationManager() {
+        locationManager.delegate = self
+        locationManager.desiredAccuracy = kCLLocationAccuracyBest
     }
     
     
@@ -24,6 +32,21 @@ class MapScreen: UIViewController {
             // Setup our location manager
         } else {
             // Show alert letting the user know they have to turn this on.
+        }
+    }
+    
+    func checkLocationAuthorization() {
+        switch CLLocationManager.authorizationStatus() {
+        case . authorizedWhenInUse:
+            break
+        case .denied:
+            break
+        case .notDetermined:
+            break
+        case .restricted:
+            break
+        case .authorizedAlways:
+            break
         }
     }
 }
