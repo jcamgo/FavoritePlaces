@@ -18,6 +18,7 @@ class MapScreen: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        checkLocationServices()
         
     }
     
@@ -29,7 +30,8 @@ class MapScreen: UIViewController {
     
     func checkLocationServices() {
         if CLLocationManager.locationServicesEnabled() {
-            // Setup our location manager
+            setupLocationManager()
+            checkLocationAuthorization()
         } else {
             // Show alert letting the user know they have to turn this on.
         }
@@ -38,12 +40,15 @@ class MapScreen: UIViewController {
     func checkLocationAuthorization() {
         switch CLLocationManager.authorizationStatus() {
         case . authorizedWhenInUse:
+            // Do Map Stuff
             break
         case .denied:
+            // Show alert instructing them how to turn on permissions
             break
         case .notDetermined:
-            break
+            locationManager.requestWhenInUseAuthorization()
         case .restricted:
+            // Show an alert letting them know what's up
             break
         case .authorizedAlways:
             break
