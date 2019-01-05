@@ -8,14 +8,36 @@
 
 import UIKit
 import MapKit
+import CoreLocation
 
-class ViewController: UIViewController {
+class MapScreen: UIViewController {
 
     @IBOutlet weak var mapView: MKMapView!
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
+        
     }
-
+    
+    
+    func checkLocationServices() {
+        if CLLocationManager.locationServicesEnabled() {
+            // Setup our location manager
+        } else {
+            // Show alert letting the user know they have to turn this on.
+        }
+    }
 }
 
+
+extension MapScreen: CLLocationManagerDelegate {
+    
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        // We'll be back
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
+        // We'll be back
+    }
+    
+    
+}
