@@ -14,17 +14,27 @@ class MapScreen: UIViewController {
 
     @IBOutlet weak var mapView: MKMapView!
     
+    
     let locationManager = CLLocationManager()
+    let regionInMeters: Double = 10000
     
     override func viewDidLoad() {
         super.viewDidLoad()
         checkLocationServices()
-        
     }
+    
     
     func setupLocationManager() {
         locationManager.delegate = self
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
+    }
+    
+    
+    func centerViewOnUserLocation() {
+        if let location = locationManager.location?.coordinate {
+            let region = MKCoordinateRegion.init(center: location, latitudinalMeters: regionInMeters, longitudinalMeters: regionInMeters)
+            mapView.setRegion(region, animated: true)
+        }
     }
     
     
@@ -37,10 +47,13 @@ class MapScreen: UIViewController {
         }
     }
     
+    
     func checkLocationAuthorization() {
         switch CLLocationManager.authorizationStatus() {
-        case . authorizedWhenInUse:
-            // Do Map Stuff
+        case .authorizedWhenInUse:
+            mapView.showsUserLocation = true
+            centerViewOnUserLocation()
+            locationManager.startUpdatingLocation()
             break
         case .denied:
             // Show alert instructing them how to turn on permissions
@@ -60,12 +73,13 @@ class MapScreen: UIViewController {
 extension MapScreen: CLLocationManagerDelegate {
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        // We'll be back
+        guard let location = locations.last else { return }
+        let region = MKCoordinateRegion.init(center: location.coordinate, latitudinalMeters: regionInMeters, longitudinalMeters: regionInMeters)
+        mapView.setRegion(region, animated: true)
     }
+    
     
     func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
-        // We'll be back
+        checkLocationAuthorization()
     }
-    
-    
 }
